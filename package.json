@@ -1,7 +1,7 @@
 {
   "scripts": {
     "compile": "tsc",
-    "start": "nodemon ./src/Pieces.ts"
+    "start": "nodemon ./src/main.ts"
   },
   "devDependencies": {
     "typescript": "^4.4.3"
