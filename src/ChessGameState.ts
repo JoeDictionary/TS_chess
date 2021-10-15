@@ -1,20 +1,21 @@
-import { BoardState } from './BoardState'
+import { Fen } from './Types';
+import { Board } from './Board'
 export const START_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 
 export class ChessGameState {
-  board: BoardState
+  board: Board
   isWhiteActive: boolean
   castling: string
   enPassant: string
 
-  static stateFromFen(fen: string): [BoardState, boolean, string, string] {
-    // TODO CHANGE enPassant TO x,y COORDINATES
+  static stateFromFen(fen: string): [Board, boolean, string, string] {
+    // TODO CHANGE enPassant to x,y COORDINATES
     const [boardState, activeColor, castling, enPassant, ,] = fen.split(' ')
-    return [new BoardState(fen), true ? activeColor === 'w' : false, castling, enPassant]
+    return [new Board(fen), true ? activeColor === 'w' : false, castling, enPassant]
   }
 
   constructor(
-    boardStateOrFen: BoardState | string,
+    boardStateOrFen: Board | Fen,
     isWhiteActive: boolean,
     castling: string,
     enPassant: string
