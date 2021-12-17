@@ -7,6 +7,16 @@ const BLACK_PIECES = 'prnbqk';
 const ALL_PIECES = WHITE_PIECES + BLACK_PIECES;
 
 export class PieceMoves {
+  // TODO Leave in this class or move elsewhere?
+  static N = { x: 0, y: -1 };
+  static S = { x: 0, y: 1 };
+  static E = { x: 1, y: 0 };
+  static W = { x: -1, y: 0 };
+  static NE = { x: 1, y: -1 };
+  static NW = { x: -1, y: -1 };
+  static SE = { x: 1, y: 1 };
+  static SW = { x: -1, y: 1 };
+
   static isPiece(p: string) {
     return ALL_PIECES.includes(p);
   }
@@ -24,9 +34,9 @@ export class PieceMoves {
   }
 
   static offsetLineMoves(board: Board, pos: Coord, offset: Coord): Coord[] {
-    // const isWhite = PieceMoves.isWhite(board.state[pos.y][pos.x]);
+    /* Returns moves in a line from a given position */
     let moves: Coord[] = [];
-    let isMovingWhite = this.isWhite(board.state[pos.y][pos.x]);
+    const isWhite = this.isWhite(board.state[pos.y][pos.x]);
 
     for (
       let y = pos.y + offset.y, x = pos.x + offset.x;
@@ -38,30 +48,34 @@ export class PieceMoves {
       const isTargetPiece = this.isPiece(targetSquare);
       const isTargetWhite = this.isWhite(targetSquare);
 
-      // Check if target square has piece and if it has a piece:
-      //    if piece is ally to "movingPiece" break
-      if (this.isPiece(targetSquare) && isTargetWhite === isMovingWhite) break;
+      if (this.isPiece(targetSquare) && isTargetWhite === isWhite) break;
       moves.push({ y: y, x: x });
-      // Check if target square has a piece and if it is a piece:
-      //    if piece is enemy to "movingPiece" break
-      if (isTargetPiece && isTargetWhite !== isMovingWhite) break;
+      if (isTargetPiece && isTargetWhite !== isWhite) break;
     }
     return moves;
   }
 
   static RookMoves(board: Board, pos: Coord): Coord[] {
-    const offsets = [
-      { x: 1, y: 0 },
-      { x: -1, y: 0 },
-      { x: 0, y: 1 },
-      { x: 0, y: -1 },
-    ];
+    const offsets = [this.E, this.W, this.N, this.S];
 
     let moves: Coord[] = [];
 
     for (let offset of offsets) {
       const a = this.offsetLineMoves(board, pos, offset);
-      moves = moves.concat(a)
+      moves = moves.concat(a);
+    }
+    return moves;
+  }
+
+  // TODO CODE REPEATING
+  static BishopMoves(board: Board, pos: Coord): Coord[] {
+    const offsets = [this.NE, this.NW, this.SE, this.SW];
+
+    let moves: Coord[] = [];
+
+    for (let offset of offsets) {
+      const a = this.offsetLineMoves(board, pos, offset);
+      moves = moves.concat(a);
     }
     return moves;
   }

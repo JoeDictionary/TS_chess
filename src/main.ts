@@ -10,13 +10,14 @@ function printBoard(state: string[][]) {
   }
 }
 
-function markMoves(board: Board, moves: Coord[]): void {
+function markSquares(board: Board, squares: Coord[]): void {
+  /* DEBUG Highlights squares on a given board and prints the board. */
   const char = '█';
   let tempBoard = board.state.slice();
 
-  for (let move of moves) {
-    console.log(tempBoard[move.y][move.x]);
-    tempBoard[move.y][move.x] = char;
+  for (let square of squares) {
+    console.log(tempBoard[square.y][square.x]);
+    tempBoard[square.y][square.x] = char;
   }
   printBoard(tempBoard);
 }
@@ -24,4 +25,4 @@ function markMoves(board: Board, moves: Coord[]): void {
 let myBoard = new Board(TEST_FEN);
 let moves = PieceMoves.RookMoves(myBoard, { x: 4, y: 4 });
 
-markMoves(myBoard, moves);
+markSquares(myBoard, moves);
