@@ -33,15 +33,26 @@ export class PieceMoves {
     return pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0;
   }
 
-  static offsetLineMoves(board: Board, pos: Coord, offset: Coord): Coord[] {
-    /* Returns moves in a line from a given position */
+  /*
+  Returns straight line of moves in a given "direction" on the "board" from POV of piece on position "pos".
+  If color different form the color of the piece on "pos" on the "board" should be used, set "isWhite" accordingly.
+  Used for example in move generation for Rooks or Bishops.
+  */
+  static lineMoves(
+    board: Board,
+    pos: Coord,
+    direction: Coord,
+    isWhite?: boolean
+  ): Coord[] {
     let moves: Coord[] = [];
-    const isWhite = this.isWhite(board.state[pos.y][pos.x]);
+    if (!isWhite) {
+      isWhite = this.isWhite(board.state[pos.y][pos.x]);
+    }
 
     for (
-      let y = pos.y + offset.y, x = pos.x + offset.x;
+      let y = pos.y + direction.y, x = pos.x + direction.x;
       !this.isOutOfBounds({ y: y, x: x });
-      y += offset.y, x += offset.x
+      y += direction.y, x += direction.x
     ) {
       // console.log(`loop    x: ${x}    y: ${y}`);
       const targetSquare = board.state[y][x];
@@ -55,28 +66,74 @@ export class PieceMoves {
     return moves;
   }
 
-  static RookMoves(board: Board, pos: Coord): Coord[] {
-    const offsets = [this.E, this.W, this.N, this.S];
-
+  // TODO move this into "lineMoves"
+  static multipleLinesMoves(
+    board: Board,
+    pos: Coord,
+    directions: Coord[],
+    isWhite?: boolean
+  ): Coord[] {
     let moves: Coord[] = [];
 
-    for (let offset of offsets) {
-      const a = this.offsetLineMoves(board, pos, offset);
-      moves = moves.concat(a);
+    for (let direction of directions) {
+      const m = this.lineMoves(board, pos, direction, isWhite);
+      moves = moves.concat(m);
     }
+
     return moves;
   }
 
-  // TODO CODE REPEATING
-  static BishopMoves(board: Board, pos: Coord): Coord[] {
-    const offsets = [this.NE, this.NW, this.SE, this.SW];
+  static RookMoves(board: Board, pos: Coord): Coord[] {
+    const directions = [this.E, this.W, this.N, this.S];
+    return this.multipleLinesMoves(board, pos, directions);
+  }
 
-    let moves: Coord[] = [];
+  static BishopMoves(board: Board, pos: Coord): Coord[] {
+    const directions = [this.NE, this.NW, this.SE, this.SW];
+    return this.multipleLinesMoves(board, pos, directions);
+  }
+
+  static QueenMoves(board: Board, pos: Coord): Coord[] {
+    const directions = [
+      this.E,
+      this.W,
+      this.N,
+      this.S,
+      this.NE,
+      this.NW,
+      this.SE,
+      this.SW,
+    ];
+
+    return this.multipleLinesMoves(board, pos, directions);
+  }
+
+  static KnightMoves(board: Board, pos: Coord): Coord[] {
+    const moves: Coord[] = [];
+    const offsets = [
+      { y: -3, x: -1 },
+      { y: -3, x: 1 },
+      { y: -1, x: 3 },
+      { y: 1, x: 3 },
+      { y: 3, x: 1 },
+      { y: 3, x: -1 },
+      { y: 1, x: -3 },
+      { y: -1, x: -3 },
+    ];
+    // TODO code repeat!
+    const isWhite = this.isWhite(board.state[pos.y][pos.x]);
 
     for (let offset of offsets) {
-      const a = this.offsetLineMoves(board, pos, offset);
-      moves = moves.concat(a);
+      const y = pos.y + offset.y;
+      const x = pos.x + offset.x;
+      // TODO code repeat!
+      const targetSquare = board.state[y][x];
+      const isTargetWhite = this.isWhite(targetSquare);
+
+      if (this.isPiece(targetSquare) && isTargetWhite === isWhite) continue;
+      moves.push({ y, x });
     }
+
     return moves;
   }
 }
