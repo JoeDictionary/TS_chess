@@ -5,6 +5,7 @@ import { Fen } from './Types';
 const WHITE_PIECES = 'PRNBQK';
 const BLACK_PIECES = 'prnbqk';
 const ALL_PIECES = WHITE_PIECES + BLACK_PIECES;
+const EN_PASSANT_MARKER = '-';
 
 export class PieceMoves {
   // TODO Leave in this class or move elsewhere?
@@ -31,6 +32,10 @@ export class PieceMoves {
 
   static isOutOfBounds(pos: Coord) {
     return pos.x > 7 || pos.x < 0 || pos.y > 7 || pos.y < 0;
+  }
+
+  static getPiece(board: Board, pos: Coord): string {
+    return board.state[pos.y][pos.x];
   }
 
   /*
@@ -136,4 +141,11 @@ export class PieceMoves {
 
     return moves;
   }
+
+  static isFirstMove(isWhite: boolean, pos: Coord): boolean {
+    if (isWhite && pos.y === 6) return true;
+    if (!isWhite && pos.y === 1) return true;
+    return false;
+  }
+
 }

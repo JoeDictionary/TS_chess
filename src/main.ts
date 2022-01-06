@@ -29,5 +29,3 @@ let moves = PieceMoves.QueenMoves(myBoard, { x: 4, y: 4 });
 moves = PieceMoves.KnightMoves(myBoard, { x: 4, y: 4 });
 
 markSquares(myBoard, moves);
-
-// printBoard(myBoard);
