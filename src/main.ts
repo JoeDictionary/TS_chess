@@ -2,7 +2,7 @@ import { Coord } from './interfaces';
 import { PieceMoves } from './PieceMoves';
 import { Board } from './Board';
 import { ChessGameState, START_FEN } from './ChessGameState';
-const TEST_FEN = 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR';
+const TEST_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
 function printBoard(board: Board | string[][]) {
   if (board instanceof Board) {
@@ -24,8 +24,10 @@ function markSquares(board: Board, squares: Coord[]): void {
   printBoard(tempBoard);
 }
 
-let myBoard = new Board(TEST_FEN);
-let moves = PieceMoves.QueenMoves(myBoard, { x: 4, y: 4 });
-moves = PieceMoves.KnightMoves(myBoard, { x: 4, y: 4 });
+let myBoard = new Board('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1');
+// let moves = PieceMoves.QueenMoves(myBoard, { x: 4, y: 4 });
+// moves = PieceMoves.KnightMoves(myBoard, { x: 4, y: 4 });
 
-markSquares(myBoard, moves);
+printBoard(myBoard);
+console.log(myBoard.boardStateToFen());
+// markSquares(myBoard, moves);

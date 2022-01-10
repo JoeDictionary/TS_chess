@@ -5,9 +5,22 @@ const START_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 export class Board {
   private _state: string[][];
   private _activeColor: string;
-  private _castling: object;
-  private _enPassant: Coord | null;
+  private _castling: string;
+  private _enPassant: string;
 
+  // TODO Any way to resolve the "any" type?
+  get enPassant(): any {
+    if (this._enPassant === '-') return null;
+    return Board.algebraicToCoord(this._enPassant);
+  }
+
+  set enPassant({ y, x }: Coord) {
+    const file = String.fromCharCode(97 + y);
+    const rank = x + 1;
+    this._enPassant = `${file}${rank}`;
+  }
+
+  // TODO Move to some kind of utility namespace
   // WARNING: Not meant to translate moves but square positions.
   static algebraicToCoord(algebraic: string) {
     const y = parseInt(algebraic[1]) - 1;
@@ -35,50 +48,44 @@ export class Board {
     return board;
   }
 
-  static castlingFromFen(fen: string): object {
-    const [, , castlingFen, , ,] = fen.split(' ');
-    const castling = {
-      w: { king: false, queen: false },
-      b: { king: false, queen: false },
-    };
-    // TODO Better way?
-    if (castlingFen.includes('K')) castling.w.king = true;
-    if (castlingFen.includes('Q')) castling.w.queen = true;
-    if (castlingFen.includes('k')) castling.b.king = true;
-    if (castlingFen.includes('q')) castling.b.queen = true;
-    return castling;
-  }
-
-  static enPassantFromFen(fen: string): Coord | null {
-    const [, , , enPassantFen, ,] = fen.split(' ');
-    if (enPassantFen === '-') return null;
-    return this.algebraicToCoord(enPassantFen);
-  }
-
-  static boardStateFromFen(fen = START_FEN): [string[][], string, object, Coord | null] {
-    const piecePlacement = this.piecePlacementFromFen(fen);
-    const [, activeColor, , , ,] = fen.split(' ');
-    const castling = this.castlingFromFen(fen);
-    const enPassant = this.enPassantFromFen(fen);
-
-    return [piecePlacement, activeColor, castling, enPassant];
-  }
-
   // 'fen' can be the whole fen-string or only the board-describing part.
   constructor(fen: Fen = START_FEN) {
-    [this._state, this._activeColor, this._castling, this._enPassant] =
-      Board.boardStateFromFen(fen);
+    const [, activeColor, castling, enPassant, ,] = fen.split(' ');
+    this._state = Board.piecePlacementFromFen(fen);
+    this._activeColor = activeColor;
+    this._castling = castling;
+    this._enPassant = enPassant;
+  }
+
+  getSquare(pos: Coord) {
+    return this._state[pos.y][pos.x];
+  }
+
+  rankToFen(rank: string[]): string {
+    const rankString = rank.reduce((accum, el) => accum + el, '');
+    const reg = /([\sprkbqkPRKBQK])\1*/g;
+    const r = rankString.match(reg)!;
+    const fen = r?.reduce((accum, el) => {
+      if (el[0] === ' ') return accum + el.length;
+      return accum + el;
+    }, '');
+
+    return fen;
+  }
+
+  stateToFen() {
+    const a = this._state.reduce((accum, el) => accum.concat(this.rankToFen(el)), []);
+    return a.join('/');
+  }
+
+  boardStateToFen(): string {
+    let fen = '';
+    const piecePlacement = this.stateToFen();
+
+    return `${piecePlacement} ${this._activeColor} ${this._castling} ${this._enPassant} 0 1`;
   }
 
   get state(): string[][] {
     return this._state;
-  }
-
-  set state(newState: string[][] | Fen) {
-    if (typeof newState === 'string') {
-      this._state = Board.boardStateFromFen(newState);
-      return;
-    }
-    this._state = newState;
   }
 }
