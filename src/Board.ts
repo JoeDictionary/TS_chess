@@ -1,3 +1,4 @@
+import { EMPTY_SQ } from './PieceMoves';
 import { Coord } from './interfaces';
 import { Fen } from './Types';
 const START_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
@@ -66,10 +67,10 @@ export class Board {
 
   rankToFen(rank: string[]): string {
     const rankString = rank.reduce((accum, el) => accum + el, '');
-    const reg = /([\sprkbqkPRKBQK])\1*/g;
-    const r = rankString.match(reg)!;
+    const re = RegExp(`([${EMPTY_SQ}prkbqkPRKBQK])\\1*`, 'g');
+    const r = rankString.match(re)!;
     const fen = r?.reduce((accum, el) => {
-      if (el[0] === ' ') return accum + el.length;
+      if (el[0] === EMPTY_SQ) return accum + el.length;
       return accum + el;
     }, '');
 

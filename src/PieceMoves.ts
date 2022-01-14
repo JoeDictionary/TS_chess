@@ -4,8 +4,7 @@ import { Fen } from './Types';
 
 const WHITE_PIECES = 'PRNBQK';
 const BLACK_PIECES = 'prnbqk';
-const ALL_PIECES = WHITE_PIECES + BLACK_PIECES;
-const EN_PASSANT_MARKER = '-';
+export const EMPTY_SQ = ' '; // Cannot be an empty string
 
 export class PieceMoves {
   // TODO Leave in this class or move elsewhere?
