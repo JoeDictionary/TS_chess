@@ -58,8 +58,10 @@ export class Board {
     this._enPassant = enPassant;
   }
 
-  getSquare(pos: Coord) {
-    return this._state[pos.y][pos.x];
+  // Returns square at {y, x}. If out of board bounds returns '!'.
+  getSq({ y, x }: Coord): string {
+    if (y >= 0 && y <= 7 && x >= 0 && x <= 7) return this._state[y][x];
+    return '!';
   }
 
   rankToFen(rank: string[]): string {
