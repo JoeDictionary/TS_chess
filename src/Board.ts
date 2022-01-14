@@ -23,8 +23,9 @@ export class Board {
   // TODO Move to some kind of utility namespace
   // WARNING: Not meant to translate moves but square positions.
   static algebraicToCoord(algebraic: string) {
-    const y = parseInt(algebraic[1]) - 1;
-    const x = algebraic.charCodeAt(0) - 97;
+    const [rank, file] = [algebraic[1], algebraic[0]];
+    const y = 7 - (parseInt(rank) - 1);
+    const x = file.charCodeAt(0) - 97;
 
     return { y: y, x: x };
   }
