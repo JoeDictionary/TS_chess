@@ -9,8 +9,8 @@ export class Board {
   private _enPassant: string;
 
   // TODO Any way to resolve the "any" type?
-  get enPassant(): any {
-    if (this._enPassant === '-') return null;
+  get enPassant(): Coord {
+    if (this._enPassant === '-') return { y: -1, x: -1 };
     return Board.algebraicToCoord(this._enPassant);
   }
 
