@@ -21,14 +21,15 @@ export class Board {
     this._enPassant = `${file}${rank}`;
   }
 
-  // TODO Move to some kind of utility namespace
+  // TODO Reverse rank numbers!
+  // TODO Move to some kind of utility namespace?
   // WARNING: Not meant to translate moves but square positions.
   static algebraicToCoord(algebraic: string) {
     const [rank, file] = [algebraic[1], algebraic[0]];
     const y = 7 - (parseInt(rank) - 1);
     const x = file.charCodeAt(0) - 97;
 
-    return { y: y, x: x };
+    return { y, x };
   }
 
   static piecePlacementFromFen(fen: string): string[][] {
