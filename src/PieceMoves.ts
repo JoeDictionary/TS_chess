@@ -53,6 +53,7 @@ export class PieceMoves {
       const targetIsPiece = this.isPiece(targetSquare);
       const targetColor = this.getColor(targetSquare);
 
+      // TODO Rewrite to check targetIsPiece is one if-statement and make the others nested if-statements
       if (targetIsPiece && targetColor === color) break; // TODO is 'targetIsPiece' required?
       moves.push({ y: y, x: x });
       if (targetIsPiece && targetColor !== color) break; // TODO why is 'targetIsPiece' required?
