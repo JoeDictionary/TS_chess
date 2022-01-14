@@ -1,6 +1,5 @@
 import { EMPTY_SQ } from './PieceMoves';
 import { Coord } from './interfaces';
-import { Fen } from './Types';
 const START_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
 export class Board {
@@ -9,7 +8,6 @@ export class Board {
   private _castling: string;
   private _enPassant: string;
 
-  // TODO Any way to resolve the "any" type?
   get enPassant(): Coord {
     if (this._enPassant === '-') return { y: -1, x: -1 };
     return Board.algebraicToCoord(this._enPassant);
@@ -21,9 +19,6 @@ export class Board {
     this._enPassant = `${file}${rank}`;
   }
 
-  // TODO Reverse rank numbers!
-  // TODO Move to some kind of utility namespace?
-  // WARNING: Not meant to translate moves but square positions.
   static algebraicToCoord(algebraic: string) {
     const [rank, file] = [algebraic[1], algebraic[0]];
     const y = 7 - (parseInt(rank) - 1);
@@ -52,7 +47,7 @@ export class Board {
   }
 
   // 'fen' can be the whole fen-string or only the board-describing part.
-  constructor(fen: Fen = START_FEN) {
+  constructor(fen: string = START_FEN) {
     const [, activeColor, castling, enPassant, ,] = fen.split(' ');
     this._state = Board.piecePlacementFromFen(fen);
     this._activeColor = activeColor;
