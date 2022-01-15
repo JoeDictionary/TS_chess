@@ -45,18 +45,19 @@ export class PieceMoves {
 
     for (
       let y = pos.y + direction.y, x = pos.x + direction.x;
-      !!this.isInBounds({ y: y, x: x });
+      this.isInBounds({ y: y, x: x });
       y += direction.y, x += direction.x
     ) {
-      // console.log(`loop    x: ${x}    y: ${y}`);
       const targetSquare = board.getSq({ y, x });
       const targetIsPiece = this.isPiece(targetSquare);
       const targetColor = this.getColor(targetSquare);
 
-      // TODO Rewrite to check targetIsPiece is one if-statement and make the others nested if-statements
-      if (targetIsPiece && targetColor === color) break; // TODO is 'targetIsPiece' required?
+      if (targetIsPiece) {
+        if (targetColor === color) break;
+        moves.push({ y: y, x: x });
+        break;
+      }
       moves.push({ y: y, x: x });
-      if (targetIsPiece && targetColor !== color) break; // TODO why is 'targetIsPiece' required?
     }
     return moves;
   }

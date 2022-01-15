@@ -34,9 +34,9 @@ function markSquares(board: Board, squares: Coord[]): void {
 
 let myBoard = new Board('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1');
 let moves = PieceMoves.QueenMoves(myBoard, { x: 4, y: 4 });
-moves = PieceMoves.KnightMoves(myBoard, { y: 4, x: 4 });
-moves = PieceMoves.PawnMoves(myBoard, { y: 4, x: 4 });
+// moves = PieceMoves.KnightMoves(myBoard, { y: 4, x: 4 });
+// moves = PieceMoves.PawnMoves(myBoard, { y: 4, x: 4 });
 
-markSquares(myBoard, [myBoard.enPassant]);
-console.log(moves);
+markSquares(myBoard, moves);
+// console.log(moves);
 // console.log(myBoard.boardStateToFen());
